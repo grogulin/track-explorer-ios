@@ -14,6 +14,7 @@
 		A4D9EA7E293BF39800B134F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4D9EA7D293BF39800B134F1 /* Assets.xcassets */; };
 		A4D9EA81293BF39800B134F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4D9EA7F293BF39800B134F1 /* LaunchScreen.storyboard */; };
 		A4D9EA89293BF3B300B134F1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D9EA88293BF3B300B134F1 /* Model.swift */; };
+		A4D9EA8B293CA07600B134F1 /* TrackDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D9EA8A293CA07500B134F1 /* TrackDetailsVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		A4D9EA80293BF39800B134F1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A4D9EA82293BF39800B134F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4D9EA88293BF3B300B134F1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		A4D9EA8A293CA07500B134F1 /* TrackDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackDetailsVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				A4D9EA78293BF39600B134F1 /* ViewController.swift */,
 				A4D9EA88293BF3B300B134F1 /* Model.swift */,
 				A4D9EA7A293BF39600B134F1 /* Main.storyboard */,
+				A4D9EA8A293CA07500B134F1 /* TrackDetailsVC.swift */,
 				A4D9EA7D293BF39800B134F1 /* Assets.xcassets */,
 				A4D9EA7F293BF39800B134F1 /* LaunchScreen.storyboard */,
 				A4D9EA82293BF39800B134F1 /* Info.plist */,
@@ -144,6 +147,7 @@
 				A4D9EA79293BF39600B134F1 /* ViewController.swift in Sources */,
 				A4D9EA75293BF39600B134F1 /* AppDelegate.swift in Sources */,
 				A4D9EA77293BF39600B134F1 /* SceneDelegate.swift in Sources */,
+				A4D9EA8B293CA07600B134F1 /* TrackDetailsVC.swift in Sources */,
 				A4D9EA89293BF3B300B134F1 /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

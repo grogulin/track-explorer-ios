@@ -12,6 +12,10 @@ class ViewController: UIViewController {
     
     var data = [Tracks]()
     
+    enum Segues {
+        static let toDetail = "ShowTrackDetailsSegue"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -40,6 +44,12 @@ class ViewController: UIViewController {
         }
         dataTask.resume()
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segues.toDetail, let destination = segue.destination as? TrackDetailsVC, let trackIndex = tableView.indexPathForSelectedRow?.row {
+               destination.track = data[trackIndex]
+           }
+    }
 }
 
 extension ViewController: UITableViewDataSource {
@@ -47,9 +57,15 @@ extension ViewController: UITableViewDataSource {
         return data.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-        cell?.textLabel?.text = data[indexPath.row].name
-        return cell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        
+        var content = cell.defaultContentConfiguration()
+        let track = data[indexPath.row]
+        content.text = track.name
+        content.secondaryText = track.country
+        
+        cell.contentConfiguration = content
+        return cell
     }
 }
 
