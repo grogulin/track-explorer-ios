@@ -12,85 +12,89 @@ class TrackDetailsVC: UIViewController {
     @IBOutlet var TrackNameLabel: UILabel!
     @IBOutlet var TrackInfo: UILabel!
     @IBOutlet var HeaderImage: UIImageView!
+    @IBOutlet var TrackWikiInfo: UILabel!
     
     var track = Tracks()
     var imageUrl = String()
+    var trackDescription = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fetchImage(wiki_url: track.url!) { result in
-//            self.imageUrl = result
-            print(type(of: result))
-//            print(type(of: test))
-            print(result)
-            self.view.bringSubviewToFront(self.TrackNameLabel)
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//            }
+            DispatchQueue.main.async {
+                self.HeaderImage.image = result
+                self.HeaderImage.contentMode = .scaleAspectFit
+            }
+        }
+        fetchIntro(wiki_url: track.url!) { result in
+            DispatchQueue.main.async {
+                self.TrackWikiInfo.text = result
+            }
         }
         
-        
         TrackNameLabel.text = track.name
-        
         TrackInfo.text = """
 Located in \(track.location ?? "unknown city"), \(track.country ?? "unknown country").
-
 """
     }
     
+    
+    
     func fetchImage(wiki_url: String, completion: @escaping (UIImage) -> Void) {
-        var page_name = String(wiki_url.suffix(from: wiki_url.lastIndex(of: "/")!).dropFirst(1))
+        let page_name = String(wiki_url.suffix(from: wiki_url.lastIndex(of: "/")!).dropFirst(1))
         
-        var image_url = "https://en.wikipedia.org/w/api.php?action=query&titles="+page_name+"&prop=pageimages&format=json&pithumbsize=500&redirects"
+        let image_url = "https://en.wikipedia.org/w/api.php?action=query&titles="+page_name+"&prop=pageimages&format=json&pithumbsize=500&redirects"
         
         let url = URL(string: image_url)
         let session = URLSession.shared
         let dataTask = session.dataTask(with: url!) { data, response, error in
             if data != nil && error == nil {
-//                let parsingData = try String(decoding: data!, as: UTF8.self)
+                var parsingData = String(decoding: data!, as: UTF8.self)
+                parsingData = String(String(parsingData.split(separator: "source")[1]).split(separator: "width")[0])
+                parsingData = String(parsingData.dropLast(3).dropFirst(3))
 //                completion(parsingData)
-                do {
-                    var parsingData = try String(decoding: data!, as: UTF8.self)
-                    parsingData = String(String(parsingData.split(separator: "source")[1]).split(separator: "width")[0])
-                    parsingData = String(parsingData.dropLast(3).dropFirst(3))
-                    
-                    self.HeaderImage.loadFrom(URLAddress: parsingData)
-//                    completion(parsingData)
-                } catch {
-                    print("Parsing error")
-                    print(error)
-                }
+                self.loadImageFrom(url: parsingData, completion: {result in
+                    completion(result)
+                })
             }
         }
         dataTask.resume()
+    }
+    
+    func fetchIntro(wiki_url: String, completion: @escaping (String) -> Void) {
+        let page_name = String(wiki_url.suffix(from: wiki_url.lastIndex(of: "/")!).dropFirst(1))
         
-//        print(image_url)
+        let into_url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles="+page_name
+        
+        let url = URL(string: into_url)
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: url!) { data, response, error in
+            if data != nil && error == nil {
+                var parsingData = String(decoding: data!, as: UTF8.self)
+                parsingData = String(String(parsingData.split(separator: "extract")[1]).split(separator: "}")[0])
+                parsingData = String(parsingData.dropLast(1).dropFirst(3))
+                completion(parsingData)
+            }
+        }
+        dataTask.resume()
+    }
+    
+    func loadImageFrom(url: String, completion: @escaping (UIImage) -> Void)  {
+        if let url = URL(string: url) {
+            let session = URLSession.shared.dataTask(with: url) { data, response, error in
+                if data != nil && error == nil {
+//                    DispatchQueue.main.async {
+//                        self.HeaderImage.image = UIImage(data: data!)
+//                        self.HeaderImage.contentMode = .scaleAspectFill
+//                    }
+                    completion(UIImage(data: data!)!)
+                }
+            }
+            session.resume()
+        }
+        
     }
 }
 
-extension UIImageView {
-    func loadFrom(URLAddress: String) {
-        guard let url = URL(string: URLAddress) else {
-            return self.image = UIImage(named: "defaultTrack")
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            if let imageData = try? Data(contentsOf: url) {
-                if let loadedImage = UIImage(data: imageData) {
-                        self?.image = loadedImage
-                    self?.contentMode = .scaleAspectFill
-                    
-//
-//                        if loadedImage.size.width > loadedImage.size.height {
-//                            // fit
-//                            self?.contentMode = .scaleAspectFill
-//                        } else {
-//                            // fill
-//                            self?.contentMode = .scaleAspectFill
-//                        }
-                }
-            }
-        }
-    }
-}
+    
